@@ -9,14 +9,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {}
+model User {
+    id String @id @default(uuid())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-model Tournaments {}
+    username String @unique
+    duels Int @default(0)
+    wins Int @default(0)
+    losses Int @default(0)
 
-model TournamentParticipants {}
+    duelsRed Duel[] @relation("redPlayer")
+    duelsBlue Duel[] @relation("bluePlayer")
 
-model Matches {}
+    @@map("users")
+}
 
-model MatchResults {}
+model Tournament {
+    id String @id @default(uuid())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
-model Leaderboards {}
+    name String @unique
+    status TournamentStatus @default(PENDING)
+
+    maxParticipants Int @map("max_participants")
+
+    startDate DateTime @map("start_date")
+    duels Duel[]
+
+    @@map("tournament")
+}
+
+model Duel {
+    id String @id @default(uuid())
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    tournament Tournament @relation(fields: [tournamentId], references: [id])
+    tournamentId String @map("tournament_id")
+
+    redPlayer User? @relation("redPlayer", fields: [redPlayerId], references: [id]) 
+    redPlayerId String @map("red_player_id")
+
+    bluePlayer User? @relation("bluePlayer", fields: [bluePlayerId], references: [id])
+    bluePlayerId String @map("blue_player_id")
+
+    winnerId String
+
+
+    @@map("duel")
+}
+
+enum TournamentStatus {
+    PENDING
+    ACTIVE
+    COMPLETED
+    CANCELLED
+}

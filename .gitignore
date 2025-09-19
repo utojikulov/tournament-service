@@ -5,6 +5,7 @@
 /node_modules
 /build
 /prisma/generated
+/prisma/migrations
 
 # Logs
 logs
