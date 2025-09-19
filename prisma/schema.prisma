@@ -33,9 +33,6 @@ model Tournament {
     name String @unique
     status TournamentStatus @default(PENDING)
 
-    maxParticipants Int @map("max_participants")
-
-    startDate DateTime @map("start_date")
     duels Duel[]
 
     @@map("tournament")
@@ -65,5 +62,4 @@ enum TournamentStatus {
     PENDING
     ACTIVE
     COMPLETED
-    CANCELLED
 }
