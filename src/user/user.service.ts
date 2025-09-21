@@ -10,6 +10,11 @@ export class UserService {
         private readonly redisService: RedisService
     ) {}
 
+    async getAllUsers() {
+        return await this.prismaService.user.findMany({
+        })
+    }
+
     async create(dto: CreateUserDto) {
         const userExists = await this.prismaService.user.findUnique({
             where: {

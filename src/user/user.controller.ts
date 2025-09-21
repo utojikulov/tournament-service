@@ -8,6 +8,11 @@ export class UserController {
         private readonly userService: UserService
     ) {}
 
+    @Get('all')
+    async getAllUsers() {
+        return await this.userService.getAllUsers()
+    }
+
     @Post('create')
     async createUser(@Body() dto: CreateUserDto) {
         return await this.userService.create(dto)

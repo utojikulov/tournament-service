@@ -31,7 +31,6 @@ model Tournament {
     updatedAt DateTime @updatedAt @map("updated_at")
 
     name String @unique
-    status TournamentStatus @default(PENDING)
 
     duels Duel[]
 
@@ -46,20 +45,16 @@ model Duel {
     tournament Tournament @relation(fields: [tournamentId], references: [id])
     tournamentId String @map("tournament_id")
 
-    redPlayer User? @relation("redPlayer", fields: [redPlayerId], references: [id]) 
+    round Int
+
+    redPlayer User? @relation("redPlayer", fields: [redPlayerId], references: [id])
     redPlayerId String @map("red_player_id")
 
     bluePlayer User? @relation("bluePlayer", fields: [bluePlayerId], references: [id])
-    bluePlayerId String @map("blue_player_id")
+    bluePlayerId String? @map("blue_player_id")
 
     winnerId String
 
 
     @@map("duel")
-}
-
-enum TournamentStatus {
-    PENDING
-    ACTIVE
-    COMPLETED
 }
