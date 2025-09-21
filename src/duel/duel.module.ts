@@ -6,7 +6,7 @@ import { RedisService } from 'src/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
-  providers: [DuelService, PrismaService, RedisService, ConfigService],
-  controllers: [DuelController]
+    providers: [DuelService, PrismaService, RedisService, ConfigService],
+    controllers: [DuelController]
 })
 export class DuelModule {}

@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { DuelService } from 'src/duel/duel.service';
 
 @Module({
-  providers: [TournamentService, PrismaService, DuelService],
-  controllers: [TournamentController]
+    providers: [TournamentService, PrismaService, DuelService],
+    controllers: [TournamentController]
 })
 export class TournamentModule {}
