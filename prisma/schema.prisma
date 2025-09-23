@@ -54,6 +54,7 @@ model Duel {
     bluePlayerId String? @map("blue_player_id")
 
     winnerId String
+    loserId String?
 
 
     @@map("duel")

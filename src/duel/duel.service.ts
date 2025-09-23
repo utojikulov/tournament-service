@@ -26,7 +26,7 @@ export class DuelService {
                 const redPlayerId = currentPlayers[i]
                 const bluePlayerId = currentPlayers[i + 1] || null
 
-                const { winnerId } = this.handleOddPlayers(
+                const { winnerId, loserId } = this.handleDuelResult(
                     redPlayerId,
                     bluePlayerId,
                     round
@@ -39,6 +39,7 @@ export class DuelService {
                         redPlayerId: redPlayerId,
                         bluePlayerId: bluePlayerId ?? null,
                         winnerId: winnerId,
+                        loserId: loserId
                     },
                 })
                 roundDuels.push(duel)
@@ -57,28 +58,31 @@ export class DuelService {
         }
     }
 
-    private handleOddPlayers(
+    private handleDuelResult(
         redPlayer: string,
         bluePlayer: string | null,
         round: number
     ): {
         winnerId: string,
+        loserId: string | null
     } {
         if (!bluePlayer) {
             this.logger.log(`Player ${redPlayer} gets a bye in round ${round}`)
             return {
                 winnerId: redPlayer,
+                loserId: null
             }
         }
 
         const winner = Math.random() < 0.5 ? redPlayer : bluePlayer
+        const loser = winner === redPlayer ? bluePlayer : redPlayer
         this.logger.log(
             `Duel: ${redPlayer} vs ${bluePlayer}, winner: ${winner}`,
         )
-        return {
-            winnerId: winner
-        }
-        
 
+        return {
+            winnerId: winner,
+            loserId: loser
+        }
     }
 }
