@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { Duel } from 'prisma/generated'
 import { PrismaService } from 'src/prisma/prisma.service'
 
@@ -8,12 +8,30 @@ export class DuelService {
 
     constructor(private readonly prismaService: PrismaService) {}
 
-    async createRound(tournamentId: string, players: string[]) {
+    async createRound(tournamentId: string, players: string[], tx?: any) {
+        if (!tx) {
+            return this.prismaService.$transaction(async (transaction) => {
+                return this.createRoundLogic(transaction, tournamentId, players)
+            }, {
+                    isolationLevel: 'Serializable',
+                })
+        }
+
+        return this.createRoundLogic(tx, tournamentId, players)
+    }
+
+    async createRoundLogic(tx: any, tournamentId: string, players: string[]) {
         this.logger.log(
             `Creating tournament bracket for ${players.length} players`,
         )
 
-        let currentPlayers = players.sort(() => Math.random() - 0.5)
+        const tournament = await tx.tournament.findUnique({
+            where: {id: tournamentId}
+        })
+
+        if (!tournament) throw new BadRequestException('Tournament not found')
+
+        let currentPlayers = [...players]
         const duels: Duel[] = []
         let round = 1
 
@@ -32,7 +50,7 @@ export class DuelService {
                     round
                 )
 
-                const duel = await this.prismaService.duel.create({
+                const duel = await tx.duel.create({
                     data: {
                         round,
                         tournamentId,

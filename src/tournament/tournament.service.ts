@@ -55,6 +55,7 @@ export class TournamentService {
                 const duels = await this.duelService.createRound(
                     tournament.id,
                     dto.players,
+                    tx
                 )
 
                 return { ...tournament, duels }
